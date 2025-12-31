@@ -90,11 +90,11 @@ export default async function CharacterPage({ params }: Props) {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
       
-      <div className="py-12 px-4 relative z-10">
-        <div className="max-w-4xl mx-auto">
+      <div className="relative z-10" style={{ paddingTop: '3rem', paddingBottom: '3rem' }}>
+        <div className="container-xl" style={{ maxWidth: '896px', margin: '0 auto' }}>
           {/* Breadcrumb */}
           <nav className="mb-8 text-sm animate-fade-in-up">
-            <ol className="flex items-center gap-2 text-[var(--text-muted)]">
+            <ol style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: 'var(--text-muted)' }}>
               <li><Link href="/" className="hover:text-[var(--accent-primary)] transition-colors">Home</Link></li>
               <li className="text-[var(--border)]">/</li>
               <li><Link href={`/anime/${character.animeSlug}/`} className="hover:text-[var(--accent-primary)] transition-colors">{character.anime}</Link></li>
@@ -105,11 +105,11 @@ export default async function CharacterPage({ params }: Props) {
 
           {/* Header */}
           <header className="mb-14 animate-fade-in-up stagger-1">
-            <div className="flex items-start gap-6">
+            <div style={{ display: 'flex', alignItems: 'flex-start', gap: '1.5rem' }}>
               <div className="avatar w-20 h-20 text-3xl glow-pink animate-float">
                 {character.name[0]}
               </div>
-              <div className="flex-1">
+              <div style={{ flex: 1 }}>
                 <h1 className="text-4xl md:text-5xl font-extrabold mb-2">{character.name}</h1>
                 <Link 
                   href={`/anime/${character.animeSlug}/`}
@@ -117,7 +117,7 @@ export default async function CharacterPage({ params }: Props) {
                 >
                   {character.anime}
                 </Link>
-                <div className="flex flex-wrap gap-2 mt-5">
+                <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem', marginTop: '1.25rem' }}>
                   {character.tags.map((tag) => (
                     <Link
                       key={tag}
