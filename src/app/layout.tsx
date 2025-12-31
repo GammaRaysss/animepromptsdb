@@ -28,7 +28,7 @@ export const metadata: Metadata = {
 function Header() {
   return (
     <header className="fixed top-0 left-0 right-0 z-50 bg-[var(--bg-primary)]/90 backdrop-blur-xl border-b border-[var(--border)]">
-      <div className="container-xl h-16 flex items-center justify-between">
+      <div className="container-xl" style={{ height: '64px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
         <Link href="/" className="flex items-center gap-3 group">
           <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-[var(--accent-primary)] to-[var(--accent-secondary)] flex items-center justify-center text-white text-lg group-hover:scale-110 transition-transform">
             ⚡

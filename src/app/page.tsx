@@ -10,7 +10,7 @@ export default function Home() {
   return (
     <div className="relative z-10">
       {/* Hero Section */}
-      <section className="py-24">
+      <section className="pt-12 pb-24">
         <div className="container-xl text-center">
           <div style={{ maxWidth: '896px', margin: '0 auto' }}>
             {/* Badge */}

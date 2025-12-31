@@ -20,7 +20,7 @@ export default function Search({ characters }: SearchProps) {
   const showResults = isFocused && query.trim().length > 0;
 
   return (
-    <div className="relative w-full max-w-xl mx-auto">
+    <div className="relative" style={{ width: '100%', maxWidth: '576px', margin: '0 auto' }}>
       <div className="relative">
         <svg 
           className="absolute left-5 top-1/2 -translate-y-1/2 w-5 h-5 text-[var(--text-muted)]" 
