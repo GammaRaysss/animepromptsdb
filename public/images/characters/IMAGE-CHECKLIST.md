@@ -1,16 +1,38 @@
 # Image Generation Checklist
 
 ## File Naming Convention
-Each folder needs exactly 3 files:
+Each character folder needs the following files:
+
+### Model-Specific Images (Original)
 - `noobai.webp` - Generated with NoobAI-XL
-- `illustrious.webp` - Generated with Illustrious-XL  
+- `illustrious.webp` - Generated with Illustrious-XL
 - `pony.webp` - Generated with Pony Diffusion V6
 
+### Shot Type Images (New)
+- `portrait.webp` - Close-up face/portrait shot
+- `upper-body.webp` - Cowboy shot / upper body
+- `full-body.webp` - Full body standing shot
+
 ## Generation Settings (Recommended)
+
+### General
 - Resolution: 1024x1024
 - Steps: 25-30
 - CFG: 7
 - Sampler: DPM++ 2M Karras
+
+### Shot Type Specific Tags
+**Portrait:**
+- Add: `portrait, close-up, face focus, head shot`
+- Best for: expressions, eye details, hair details
+
+**Upper Body:**
+- Add: `upper body, cowboy shot`
+- Best for: outfit details, gestures, accessories
+
+**Full Body:**
+- Add: `full body, standing`
+- Best for: complete outfit, pose, environment
 
 ## Priority Characters (Top Traffic)
 
@@ -121,8 +143,23 @@ Each folder needs exactly 3 files:
 
 ## Progress Tracker
 - Total Characters: 97
-- Total Images Needed: 291
-- Estimated Time: 8-12 hours
+- Images per character: 6 (3 model + 3 shot type)
+- Total Images Needed: 582
+- Estimated Time: 15-20 hours
+
+## Folder Structure Example
+```
+public/images/characters/
+├── makima/
+│   ├── noobai.webp
+│   ├── illustrious.webp
+│   ├── pony.webp
+│   ├── portrait.webp
+│   ├── upper-body.webp
+│   └── full-body.webp
+├── zero-two/
+│   └── ...
+```
 
 ## WebP Conversion Commands
 

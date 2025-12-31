@@ -1,28 +1,40 @@
 'use client';
 
 import { useState } from 'react';
+import Image from 'next/image';
 import { MODEL_PRESETS, generateModelPrompt, getModelNegativePrompt } from '@/data/modelPresets';
+import { SHOT_TYPES, SHOT_TYPE_ORDER } from '@/data/shotTypes';
 import CopyButton from './CopyButton';
 
 interface ModelPromptGeneratorProps {
   characterName: string;
+  characterSlug: string;
   basePrompt: string;
   baseNegative: string;
 }
 
 export default function ModelPromptGenerator({
   characterName,
+  characterSlug,
   basePrompt,
   baseNegative
 }: ModelPromptGeneratorProps) {
   const [selectedModel, setSelectedModel] = useState('noobai');
+  const [selectedShot, setSelectedShot] = useState('portrait');
+  const [imageError, setImageError] = useState<Record<string, boolean>>({});
 
   const preset = MODEL_PRESETS[selectedModel];
-  const optimizedPrompt = generateModelPrompt(basePrompt, selectedModel);
+  const shotType = SHOT_TYPES[selectedShot];
+
+  // Build the prompt with shot type tags
+  const shotTags = shotType.tags.join(', ');
+  const promptWithShot = `${basePrompt}, ${shotTags}`;
+  const optimizedPrompt = generateModelPrompt(promptWithShot, selectedModel);
   const optimizedNegative = getModelNegativePrompt(selectedModel, baseNegative);
 
   return (
     <section className="mb-10">
+      {/* Model Selection */}
       <h2 className="text-xl font-bold mb-4 flex items-center gap-3">
         <span className="w-8 h-8 rounded-lg bg-gradient-to-br from-[var(--accent-primary)] to-[var(--accent-secondary)] flex items-center justify-center text-white text-sm">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
@@ -35,7 +47,7 @@ export default function ModelPromptGenerator({
       </h2>
 
       {/* Model Tabs */}
-      <div className="flex flex-wrap gap-2 mb-6">
+      <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem', marginBottom: '1.5rem' }}>
         {Object.entries(MODEL_PRESETS).map(([id, model]) => (
           <button
             key={id}
@@ -61,7 +73,7 @@ export default function ModelPromptGenerator({
       </div>
 
       {/* Selected Model Info */}
-      <div className="card p-4 mb-6" style={{ borderColor: 'var(--accent-primary)', borderWidth: '1px' }}>
+      <div className="card p-4 mb-8" style={{ borderColor: 'var(--accent-primary)', borderWidth: '1px' }}>
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.75rem' }}>
           <h3 className="font-semibold text-lg">{preset.name}</h3>
           <span className="tag" style={{ background: 'var(--accent-primary)', color: 'white', border: 'none' }}>
@@ -91,12 +103,180 @@ export default function ModelPromptGenerator({
         </div>
       </div>
 
+      {/* Shot Type Section */}
+      <h2 className="text-xl font-bold mb-4 flex items-center gap-3">
+        <span className="w-8 h-8 rounded-lg bg-[var(--bg-card)] border border-[var(--border)] flex items-center justify-center text-sm">
+          📷
+        </span>
+        Shot Type
+      </h2>
+
+      <div className="card p-6 mb-8">
+        {/* Shot Type Tabs */}
+        <div
+          style={{
+            display: 'flex',
+            gap: '0.5rem',
+            marginBottom: '1.5rem',
+            borderBottom: '1px solid var(--border)',
+            paddingBottom: '1rem',
+          }}
+        >
+          {SHOT_TYPE_ORDER.map((shotId) => {
+            const shot = SHOT_TYPES[shotId];
+            const isActive = selectedShot === shotId;
+            return (
+              <button
+                key={shotId}
+                onClick={() => setSelectedShot(shotId)}
+                style={{
+                  padding: '0.625rem 1rem',
+                  borderRadius: '8px',
+                  fontSize: '0.875rem',
+                  fontWeight: 600,
+                  border: '2px solid',
+                  borderColor: isActive ? 'var(--accent-secondary)' : 'var(--border)',
+                  background: isActive
+                    ? 'linear-gradient(135deg, rgba(192,132,252,0.15), rgba(139,92,246,0.15))'
+                    : 'transparent',
+                  color: isActive ? 'var(--accent-secondary)' : 'var(--text-secondary)',
+                  cursor: 'pointer',
+                  transition: 'all 0.2s ease',
+                }}
+              >
+                {shot.shortName}
+              </button>
+            );
+          })}
+        </div>
+
+        {/* Content Grid */}
+        <div
+          style={{
+            display: 'grid',
+            gridTemplateColumns: '180px 1fr',
+            gap: '1.5rem',
+          }}
+        >
+          {/* Image Preview */}
+          <div
+            style={{
+              position: 'relative',
+              aspectRatio: '1',
+              borderRadius: '12px',
+              overflow: 'hidden',
+              background: 'var(--bg-secondary)',
+              border: '1px solid var(--border)',
+            }}
+          >
+            {imageError[selectedShot] ? (
+              <div
+                style={{
+                  width: '100%',
+                  height: '100%',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  color: 'var(--text-muted)',
+                  fontSize: '0.875rem',
+                  textAlign: 'center',
+                  padding: '1rem',
+                }}
+              >
+                <span style={{ fontSize: '2rem', marginBottom: '0.5rem' }}>🖼️</span>
+                <span>{shotType.shortName}</span>
+                <span style={{ fontSize: '0.75rem', opacity: 0.7 }}>Coming Soon</span>
+              </div>
+            ) : (
+              <Image
+                src={`/images/characters/${characterSlug}/${shotType.imageFile}`}
+                alt={`${characterName} - ${shotType.name}`}
+                fill
+                style={{ objectFit: 'cover' }}
+                onError={() => setImageError((prev) => ({ ...prev, [selectedShot]: true }))}
+              />
+            )}
+          </div>
+
+          {/* Tips Section */}
+          <div>
+            <p className="text-[var(--text-secondary)] mb-4">{shotType.description}</p>
+
+            {/* Tags to Add */}
+            <div className="mb-4">
+              <h4 className="text-sm font-semibold text-[var(--text-muted)] uppercase tracking-wider mb-2">
+                Added Tags
+              </h4>
+              <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.375rem' }}>
+                {shotType.tags.map((tag) => (
+                  <span
+                    key={tag}
+                    className="tag"
+                    style={{
+                      background: 'var(--accent-secondary)',
+                      color: 'white',
+                      borderColor: 'var(--accent-secondary)',
+                    }}
+                  >
+                    {tag}
+                  </span>
+                ))}
+              </div>
+            </div>
+
+            {/* Two Column Tips */}
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
+              {/* Angle Tips */}
+              <div>
+                <h4 className="text-sm font-semibold text-[var(--text-muted)] uppercase tracking-wider mb-2">
+                  Angle Tips
+                </h4>
+                <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'grid', gap: '0.25rem' }}>
+                  {shotType.angleTips.slice(0, 3).map((tip, i) => (
+                    <li key={i} style={{ fontSize: '0.75rem', color: 'var(--text-secondary)' }}>
+                      <code style={{ background: 'var(--bg-secondary)', padding: '0.125rem 0.25rem', borderRadius: '3px', fontSize: '0.6875rem' }}>
+                        {tip.split(' - ')[0]}
+                      </code>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+
+              {/* Pose Tips */}
+              <div>
+                <h4 className="text-sm font-semibold text-[var(--text-muted)] uppercase tracking-wider mb-2">
+                  Pose Tips
+                </h4>
+                <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'grid', gap: '0.25rem' }}>
+                  {shotType.poseTips.slice(0, 3).map((tip, i) => (
+                    <li key={i} style={{ fontSize: '0.75rem', color: 'var(--text-secondary)' }}>
+                      <code style={{ background: 'var(--bg-secondary)', padding: '0.125rem 0.25rem', borderRadius: '3px', fontSize: '0.6875rem' }}>
+                        {tip.split(' - ')[0]}
+                      </code>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Generated Prompts Section */}
+      <h2 className="text-xl font-bold mb-4 flex items-center gap-3">
+        <span className="w-8 h-8 rounded-lg bg-[var(--bg-card)] border border-[var(--border)] flex items-center justify-center text-sm">
+          ✨
+        </span>
+        Generated Prompts
+      </h2>
+
       {/* Optimized Prompt */}
       <div className="mb-6">
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.75rem' }}>
           <h3 className="font-semibold flex items-center gap-2">
             <span className="text-[var(--accent-primary)]">+</span>
-            Optimized Prompt for {preset.shortName}
+            {preset.shortName} + {shotType.shortName}
           </h3>
           <CopyButton text={optimizedPrompt} label="Copy" />
         </div>
@@ -108,12 +288,17 @@ export default function ModelPromptGenerator({
             </span>
             <span style={{ color: 'var(--text-muted)' }}>, </span>
             <span style={{ color: 'var(--text-secondary)' }}>
-              {optimizedPrompt.split(', ').slice(preset.qualityTags.length).join(', ')}
+              {basePrompt}
+            </span>
+            <span style={{ color: 'var(--text-muted)' }}>, </span>
+            <span style={{ color: 'var(--accent-secondary)' }}>
+              {shotTags}
             </span>
           </code>
         </div>
         <p className="text-xs text-[var(--text-muted)] mt-2">
-          <span style={{ color: 'var(--accent-primary)' }}>Pink tags</span> are model-specific quality boosters
+          <span style={{ color: 'var(--accent-primary)' }}>Pink</span> = model quality tags |
+          <span style={{ color: 'var(--accent-secondary)' }}> Purple</span> = shot type tags
         </p>
       </div>
 
@@ -122,7 +307,7 @@ export default function ModelPromptGenerator({
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.75rem' }}>
           <h3 className="font-semibold flex items-center gap-2">
             <span style={{ color: '#ef4444' }}>-</span>
-            Optimized Negative for {preset.shortName}
+            Negative Prompt
           </h3>
           <CopyButton text={optimizedNegative} label="Copy" />
         </div>
@@ -139,8 +324,8 @@ export default function ModelPromptGenerator({
         <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
             <div>
-              <h3 className="font-bold">Ready for {preset.shortName}?</h3>
-              <p className="text-sm text-[var(--text-muted)]">Copy both optimized prompts</p>
+              <h3 className="font-bold">Ready to Generate?</h3>
+              <p className="text-sm text-[var(--text-muted)]">{preset.shortName} • {shotType.shortName} • Copy both prompts</p>
             </div>
             <CopyButton
               text={`Prompt:\n${optimizedPrompt}\n\nNegative:\n${optimizedNegative}`}

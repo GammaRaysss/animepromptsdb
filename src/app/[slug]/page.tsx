@@ -132,10 +132,11 @@ export default async function CharacterPage({ params }: Props) {
             </div>
           </header>
 
-          {/* Model-Optimized Prompts - NEW */}
+          {/* Model-Optimized Prompts with Shot Types */}
           <div className="animate-fade-in-up stagger-2">
             <ModelPromptGenerator
               characterName={character.name}
+              characterSlug={character.slug}
               basePrompt={character.prompt}
               baseNegative={character.negativePrompt}
             />
