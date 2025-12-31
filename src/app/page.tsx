@@ -10,8 +10,8 @@ export default function Home() {
   return (
     <div className="relative z-10">
       {/* Hero Section */}
-      <section className="py-24 px-4">
-        <div className="max-w-5xl mx-auto text-center">
+      <section className="py-24 px-4 sm:px-6 lg:px-8">
+        <div className="max-w-4xl mx-auto text-center">
           {/* Badge */}
           <div className="animate-fade-in-up">
             <div className="hero-badge mb-8 inline-flex">
@@ -55,8 +55,8 @@ export default function Home() {
       </section>
 
       {/* Stats Section */}
-      <section className="py-12 px-4">
-        <div className="max-w-4xl mx-auto">
+      <section className="py-12 px-4 sm:px-6 lg:px-8">
+        <div className="max-w-5xl mx-auto">
           <div className="grid grid-cols-3 gap-4">
             <div className="stat-card animate-fade-in-up stagger-1">
               <div className="stat-number">{characters.length}</div>
@@ -74,11 +74,11 @@ export default function Home() {
         </div>
       </section>
 
-      <div className="section-divider max-w-5xl mx-auto"></div>
+      <div className="section-divider max-w-6xl mx-auto"></div>
 
       {/* All Characters */}
-      <section className="py-12 px-4">
-        <div className="max-w-6xl mx-auto">
+      <section className="py-12 px-4 sm:px-6 lg:px-8">
+        <div className="max-w-7xl mx-auto">
           <div className="flex items-end justify-between mb-10">
             <div>
               <h2 className="text-3xl font-bold mb-2">All Characters</h2>
@@ -89,7 +89,7 @@ export default function Home() {
             </span>
           </div>
           
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
             {characters.map((character) => (
               <CharacterCard key={character.slug} character={character} />
             ))}
@@ -97,17 +97,17 @@ export default function Home() {
         </div>
       </section>
 
-      <div className="section-divider max-w-5xl mx-auto"></div>
+      <div className="section-divider max-w-6xl mx-auto"></div>
 
       {/* Browse by Anime */}
-      <section className="py-12 px-4">
-        <div className="max-w-6xl mx-auto">
+      <section className="py-12 px-4 sm:px-6 lg:px-8">
+        <div className="max-w-7xl mx-auto">
           <div className="mb-10">
             <h2 className="text-3xl font-bold mb-2">Browse by Anime</h2>
             <p className="text-[var(--text-muted)]">Find all characters from your favorite series</p>
           </div>
           
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
             {animes.map((anime) => (
               <Link
                 key={anime.slug}
@@ -126,11 +126,11 @@ export default function Home() {
         </div>
       </section>
 
-      <div className="section-divider max-w-5xl mx-auto"></div>
+      <div className="section-divider max-w-6xl mx-auto"></div>
 
       {/* Browse by Tags */}
-      <section className="py-12 px-4">
-        <div className="max-w-6xl mx-auto">
+      <section className="py-12 px-4 sm:px-6 lg:px-8">
+        <div className="max-w-7xl mx-auto">
           <div className="mb-10">
             <h2 className="text-3xl font-bold mb-2">Browse by Tags</h2>
             <p className="text-[var(--text-muted)]">Find characters by type or archetype</p>
@@ -150,11 +150,11 @@ export default function Home() {
         </div>
       </section>
 
-      <div className="section-divider max-w-5xl mx-auto"></div>
+      <div className="section-divider max-w-6xl mx-auto"></div>
 
       {/* Features Section */}
-      <section className="py-12 px-4">
-        <div className="max-w-5xl mx-auto">
+      <section className="py-12 px-4 sm:px-6 lg:px-8">
+        <div className="max-w-6xl mx-auto">
           <div className="text-center mb-12">
             <h2 className="text-3xl font-bold mb-4">Why Use AnimePromptsDB?</h2>
             <p className="text-[var(--text-muted)] max-w-xl mx-auto">
@@ -188,11 +188,11 @@ export default function Home() {
         </div>
       </section>
 
-      <div className="section-divider max-w-5xl mx-auto"></div>
+      <div className="section-divider max-w-6xl mx-auto"></div>
 
       {/* SEO Content Section */}
-      <section className="py-12 px-4">
-        <div className="max-w-3xl mx-auto">
+      <section className="py-12 px-4 sm:px-6 lg:px-8">
+        <div className="max-w-4xl mx-auto">
           <h2 className="text-2xl font-bold mb-6">About AnimePromptsDB</h2>
           
           <div className="space-y-4 text-[var(--text-secondary)]">
