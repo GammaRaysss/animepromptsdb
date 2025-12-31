@@ -38,24 +38,39 @@ function Header() {
             <span className="gradient-text">PromptsDB</span>
           </span>
         </Link>
-        <nav className="flex items-center gap-1 sm:gap-2">
-          <Link 
-            href="/" 
+        <nav style={{ display: 'flex', alignItems: 'center', gap: '0.25rem' }}>
+          <Link
+            href="/"
             className="px-3 py-2 rounded-lg text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:bg-[var(--bg-card)] transition-all text-sm font-medium"
           >
             Characters
           </Link>
-          <Link 
-            href="/anime/" 
+          <Link
+            href="/anime/"
             className="px-3 py-2 rounded-lg text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:bg-[var(--bg-card)] transition-all text-sm font-medium"
           >
             Anime
           </Link>
-          <Link 
-            href="/tags/" 
+          <Link
+            href="/tags/"
             className="px-3 py-2 rounded-lg text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:bg-[var(--bg-card)] transition-all text-sm font-medium"
           >
             Tags
+          </Link>
+          <Link
+            href="/builder/"
+            style={{
+              padding: '0.5rem 0.75rem',
+              borderRadius: '0.5rem',
+              fontSize: '0.875rem',
+              fontWeight: 500,
+              background: 'linear-gradient(135deg, var(--accent-primary), var(--accent-secondary))',
+              color: 'white',
+              marginLeft: '0.5rem',
+              transition: 'all 0.2s ease',
+            }}
+          >
+            Builder
           </Link>
         </nav>
       </div>

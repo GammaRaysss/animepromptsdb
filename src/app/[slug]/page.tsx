@@ -5,6 +5,7 @@ import { characters, getCharacterBySlug, getCharactersByAnime } from '@/data/cha
 import CopyButton from '@/components/CopyButton';
 import CharacterCard from '@/components/CharacterCard';
 import ImageGallery from '@/components/ImageGallery';
+import ModelPromptGenerator from '@/components/ModelPromptGenerator';
 
 interface Props {
   params: Promise<{ slug: string }>;
@@ -131,33 +132,41 @@ export default async function CharacterPage({ params }: Props) {
             </div>
           </header>
 
-          {/* Main Prompt */}
-          <section className="mb-8 animate-fade-in-up stagger-2">
-            <div className="flex items-center justify-between mb-4">
-              <h2 className="text-xl font-bold flex items-center gap-3">
-                <span className="w-8 h-8 rounded-lg bg-gradient-to-br from-[var(--accent-primary)] to-[var(--accent-secondary)] flex items-center justify-center text-white text-sm">✨</span>
-                Optimized Prompt
-              </h2>
-              <CopyButton text={character.prompt} label="Copy" />
-            </div>
-            <div className="prompt-box">
-              <code>{character.prompt}</code>
-            </div>
-          </section>
+          {/* Model-Optimized Prompts - NEW */}
+          <div className="animate-fade-in-up stagger-2">
+            <ModelPromptGenerator
+              characterName={character.name}
+              basePrompt={character.prompt}
+              baseNegative={character.negativePrompt}
+            />
+          </div>
 
-          {/* Negative Prompt */}
-          <section className="mb-8 animate-fade-in-up stagger-3">
-            <div className="flex items-center justify-between mb-4">
-              <h2 className="text-xl font-bold flex items-center gap-3">
-                <span className="w-8 h-8 rounded-lg bg-[var(--bg-card)] border border-[var(--border)] flex items-center justify-center text-sm">🚫</span>
-                Negative Prompt
-              </h2>
-              <CopyButton text={character.negativePrompt} label="Copy" />
+          {/* Base Prompt (collapsible for reference) */}
+          <details className="mb-8 animate-fade-in-up stagger-3">
+            <summary className="cursor-pointer text-[var(--text-muted)] hover:text-[var(--text-secondary)] transition-colors mb-4 text-sm">
+              View base prompt (without model optimization)
+            </summary>
+            <div className="space-y-4">
+              <div>
+                <div className="flex items-center justify-between mb-2">
+                  <span className="text-sm font-medium">Base Prompt</span>
+                  <CopyButton text={character.prompt} label="Copy" />
+                </div>
+                <div className="prompt-box">
+                  <code className="text-sm">{character.prompt}</code>
+                </div>
+              </div>
+              <div>
+                <div className="flex items-center justify-between mb-2">
+                  <span className="text-sm font-medium">Base Negative</span>
+                  <CopyButton text={character.negativePrompt} label="Copy" />
+                </div>
+                <div className="prompt-box">
+                  <code className="text-sm">{character.negativePrompt}</code>
+                </div>
+              </div>
             </div>
-            <div className="prompt-box">
-              <code>{character.negativePrompt}</code>
-            </div>
-          </section>
+          </details>
 
           {/* AI Generated Examples */}
           <ImageGallery 
