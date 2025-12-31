@@ -10,8 +10,8 @@ export default function Home() {
   return (
     <div className="relative z-10">
       {/* Hero Section */}
-      <section className="pt-12 pb-24">
-        <div className="container-xl text-center">
+      <section style={{ paddingTop: '4rem', paddingBottom: '6rem' }}>
+        <div className="container-xl" style={{ textAlign: 'center' }}>
           <div style={{ maxWidth: '896px', margin: '0 auto' }}>
             {/* Badge */}
             <div className="animate-fade-in-up">
@@ -40,13 +40,14 @@ export default function Home() {
             </div>
 
             {/* Popular Characters - Quick Links */}
-            <div className="animate-fade-in-up stagger-4 flex items-center justify-center gap-3 flex-wrap">
-              <span className="text-sm text-[var(--text-muted)] mr-2">Popular:</span>
+            <div className="animate-fade-in-up stagger-4" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.75rem', flexWrap: 'wrap' }}>
+              <span style={{ fontSize: '0.875rem', color: 'var(--text-muted)', marginRight: '0.5rem' }}>Popular:</span>
               {characters.slice(0, 5).map((char) => (
                 <Link
                   key={char.slug}
                   href={`/${char.slug}/`}
                   className="btn-secondary"
+                  style={{ padding: '0.5rem 1rem' }}
                 >
                   {char.name}
                 </Link>
