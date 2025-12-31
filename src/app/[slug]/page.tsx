@@ -6,6 +6,7 @@ import CopyButton from '@/components/CopyButton';
 import CharacterCard from '@/components/CharacterCard';
 import ImageGallery from '@/components/ImageGallery';
 import ModelPromptGenerator from '@/components/ModelPromptGenerator';
+import CharacterAvatar from '@/components/CharacterAvatar';
 
 interface Props {
   params: Promise<{ slug: string }>;
@@ -106,9 +107,11 @@ export default async function CharacterPage({ params }: Props) {
           {/* Header */}
           <header className="mb-14 animate-fade-in-up stagger-1">
             <div style={{ display: 'flex', alignItems: 'flex-start', gap: '1.5rem' }}>
-              <div className="avatar w-20 h-20 text-3xl glow-pink animate-float">
-                {character.name[0]}
-              </div>
+              <CharacterAvatar
+                characterSlug={character.slug}
+                characterName={character.name}
+                size="lg"
+              />
               <div style={{ flex: 1 }}>
                 <h1 className="text-4xl md:text-5xl font-extrabold mb-2">{character.name}</h1>
                 <Link 

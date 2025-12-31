@@ -210,7 +210,7 @@ export default function ModelPromptGenerator({
               </div>
             ) : (
               <Image
-                src={`/images/characters/${characterSlug}/${shotType.imageFile}`}
+                src={`/images/characters/${characterSlug}/${characterSlug}_${selectedShot}.png`}
                 alt={`${characterName} - ${shotType.name}`}
                 fill
                 style={{ objectFit: 'cover' }}

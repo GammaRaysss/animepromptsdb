@@ -15,148 +15,214 @@ const models = [
   { id: 'pony', name: 'Pony Diffusion V6', color: '#38bdf8' },
 ];
 
+const shotTypes = [
+  { id: 'portrait', name: 'Portrait', color: '#10b981' },
+  { id: 'upper_body', name: 'Upper Body', color: '#f59e0b' },
+  { id: 'full_body', name: 'Full Body', color: '#6366f1' },
+];
+
 export default function ImageGallery({ characterSlug, characterName, anime }: ImageGalleryProps) {
   const [selectedModel, setSelectedModel] = useState<string | null>(null);
+  const [selectedShot, setSelectedShot] = useState<string | null>(null);
   const [loadedImages, setLoadedImages] = useState<Record<string, boolean>>({});
   const [failedImages, setFailedImages] = useState<Record<string, boolean>>({});
 
-  const handleImageLoad = (modelId: string) => {
-    setLoadedImages(prev => ({ ...prev, [modelId]: true }));
+  const handleImageLoad = (imageId: string) => {
+    setLoadedImages(prev => ({ ...prev, [imageId]: true }));
   };
 
-  const handleImageError = (modelId: string) => {
-    setFailedImages(prev => ({ ...prev, [modelId]: true }));
+  const handleImageError = (imageId: string) => {
+    setFailedImages(prev => ({ ...prev, [imageId]: true }));
   };
 
-  const hasAnyImages = Object.keys(loadedImages).length > 0;
-  const allImagesFailed = Object.keys(failedImages).length === models.length;
+  // Build all image combinations
+  const allImages = models.flatMap(model =>
+    shotTypes.map(shot => ({
+      id: `${model.id}_${shot.id}`,
+      modelId: model.id,
+      modelName: model.name,
+      modelColor: model.color,
+      shotId: shot.id,
+      shotName: shot.name,
+      shotColor: shot.color,
+      path: `/images/characters/${characterSlug}/${characterSlug}_${model.id}_${shot.id}.png`,
+    }))
+  );
+
+  const totalImages = allImages.length;
+  const allImagesFailed = Object.keys(failedImages).length === totalImages;
+
+  // Filter images based on selection
+  const filteredImages = allImages.filter(img => {
+    if (failedImages[img.id]) return false;
+    if (selectedModel && img.modelId !== selectedModel) return false;
+    if (selectedShot && img.shotId !== selectedShot) return false;
+    return true;
+  });
 
   // Don't render anything if no images exist
   if (allImagesFailed) {
     return null;
   }
 
+  const getGridCols = () => {
+    const count = filteredImages.length;
+    if (count === 1) return 'grid-cols-1';
+    if (count === 2) return 'grid-cols-1 md:grid-cols-2';
+    if (count === 3) return 'grid-cols-1 md:grid-cols-3';
+    return 'grid-cols-1 md:grid-cols-3';
+  };
+
   return (
     <div className="mb-10">
       <div className="flex items-center gap-3 mb-6">
         <span className="text-2xl">🖼️</span>
         <h2 className="text-xl font-bold">AI Generated Examples</h2>
-        <span className="text-sm text-[var(--text-muted)] bg-[var(--bg-secondary)] px-3 py-1 rounded-full">
-          Same prompt, different models
-        </span>
       </div>
 
-      {/* Model Tabs */}
-      <div className="flex gap-2 mb-4 flex-wrap">
-        {models.map((model) => {
-          if (failedImages[model.id]) return null;
-          return (
+      {/* Filters */}
+      <div className="mb-6 space-y-3">
+        {/* Model Filter */}
+        <div>
+          <span className="text-xs text-[var(--text-muted)] uppercase tracking-wider mr-3">Model:</span>
+          <div className="inline-flex gap-2 flex-wrap">
             <button
-              key={model.id}
-              onClick={() => setSelectedModel(selectedModel === model.id ? null : model.id)}
-              className={`px-4 py-2 rounded-xl text-sm font-medium transition-all ${
-                selectedModel === model.id
-                  ? 'text-white'
+              onClick={() => setSelectedModel(null)}
+              className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all ${
+                selectedModel === null
+                  ? 'bg-[var(--text-primary)] text-[var(--bg-primary)]'
                   : 'bg-[var(--bg-card)] border border-[var(--border)] hover:border-[var(--border-light)]'
               }`}
-              style={selectedModel === model.id ? { background: model.color } : {}}
             >
-              {model.name}
+              All
             </button>
-          );
-        })}
+            {models.map((model) => (
+              <button
+                key={model.id}
+                onClick={() => setSelectedModel(selectedModel === model.id ? null : model.id)}
+                className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all ${
+                  selectedModel === model.id
+                    ? 'text-white'
+                    : 'bg-[var(--bg-card)] border border-[var(--border)] hover:border-[var(--border-light)]'
+                }`}
+                style={selectedModel === model.id ? { background: model.color } : {}}
+              >
+                {model.name}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        {/* Shot Type Filter */}
+        <div>
+          <span className="text-xs text-[var(--text-muted)] uppercase tracking-wider mr-3">Shot:</span>
+          <div className="inline-flex gap-2 flex-wrap">
+            <button
+              onClick={() => setSelectedShot(null)}
+              className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all ${
+                selectedShot === null
+                  ? 'bg-[var(--text-primary)] text-[var(--bg-primary)]'
+                  : 'bg-[var(--bg-card)] border border-[var(--border)] hover:border-[var(--border-light)]'
+              }`}
+            >
+              All
+            </button>
+            {shotTypes.map((shot) => (
+              <button
+                key={shot.id}
+                onClick={() => setSelectedShot(selectedShot === shot.id ? null : shot.id)}
+                className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all ${
+                  selectedShot === shot.id
+                    ? 'text-white'
+                    : 'bg-[var(--bg-card)] border border-[var(--border)] hover:border-[var(--border-light)]'
+                }`}
+                style={selectedShot === shot.id ? { background: shot.color } : {}}
+              >
+                {shot.name}
+              </button>
+            ))}
+          </div>
+        </div>
       </div>
 
       {/* Image Grid */}
-      <div className={`grid gap-4 ${selectedModel ? 'grid-cols-1' : 'grid-cols-1 md:grid-cols-3'}`}>
-        {models.map((model) => {
-          if (failedImages[model.id]) return null;
-          if (selectedModel && selectedModel !== model.id) return null;
-          
-          const imagePath = `/images/characters/${characterSlug}/${model.id}.webp`;
-          const altText = `${characterName} from ${anime} - AI art generated with ${model.name} using Stable Diffusion`;
-          
+      <div className={`grid gap-4 ${getGridCols()}`}>
+        {filteredImages.map((img) => {
+          const altText = `${characterName} from ${anime} - ${img.shotName} shot generated with ${img.modelName}`;
+
           return (
             <div
-              key={model.id}
-              className="relative group cursor-pointer"
-              onClick={() => setSelectedModel(selectedModel === model.id ? null : model.id)}
+              key={img.id}
+              className="relative group"
             >
-              <div 
-                className={`relative overflow-hidden rounded-2xl border-2 transition-all ${
-                  selectedModel === model.id 
-                    ? 'border-[var(--accent-primary)]' 
-                    : 'border-[var(--border)] hover:border-[var(--border-light)]'
-                }`}
+              <div
+                className="relative overflow-hidden rounded-2xl border-2 border-[var(--border)] hover:border-[var(--border-light)] transition-all"
                 style={{ aspectRatio: '1/1' }}
               >
                 {/* Placeholder while loading */}
-                {!loadedImages[model.id] && !failedImages[model.id] && (
+                {!loadedImages[img.id] && !failedImages[img.id] && (
                   <div className="absolute inset-0 bg-[var(--bg-secondary)] animate-pulse flex items-center justify-center">
                     <svg className="w-12 h-12 text-[var(--text-muted)]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
                     </svg>
                   </div>
                 )}
-                
+
                 <Image
-                  src={imagePath}
+                  src={img.path}
                   alt={altText}
-                  title={`${characterName} ${model.name} Stable Diffusion result`}
+                  title={`${characterName} ${img.modelName} ${img.shotName}`}
                   fill
                   className={`object-cover transition-transform duration-300 group-hover:scale-105 ${
-                    loadedImages[model.id] ? 'opacity-100' : 'opacity-0'
+                    loadedImages[img.id] ? 'opacity-100' : 'opacity-0'
                   }`}
-                  onLoad={() => handleImageLoad(model.id)}
-                  onError={() => handleImageError(model.id)}
-                  sizes={selectedModel ? '(max-width: 768px) 100vw, 800px' : '(max-width: 768px) 100vw, 33vw'}
+                  onLoad={() => handleImageLoad(img.id)}
+                  onError={() => handleImageError(img.id)}
+                  sizes="(max-width: 768px) 100vw, 33vw"
                 />
 
-                {/* Model Label */}
-                <div 
+                {/* Labels */}
+                <div
                   className="absolute bottom-0 left-0 right-0 p-3 bg-gradient-to-t from-black/80 to-transparent"
                 >
-                  <div className="flex items-center gap-2">
-                    <span 
-                      className="w-2 h-2 rounded-full" 
-                      style={{ background: model.color }}
-                    />
-                    <span className="text-white text-sm font-medium">{model.name}</span>
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-2">
+                      <span
+                        className="w-2 h-2 rounded-full"
+                        style={{ background: img.modelColor }}
+                      />
+                      <span className="text-white text-sm font-medium">{img.modelName}</span>
+                    </div>
+                    <span
+                      className="text-xs px-2 py-0.5 rounded-full text-white"
+                      style={{ background: img.shotColor }}
+                    >
+                      {img.shotName}
+                    </span>
                   </div>
                 </div>
-
-                {/* Expand Icon */}
-                {!selectedModel && (
-                  <div className="absolute top-3 right-3 opacity-0 group-hover:opacity-100 transition-opacity">
-                    <div className="bg-black/60 rounded-lg p-2">
-                      <svg className="w-4 h-4 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4" />
-                      </svg>
-                    </div>
-                  </div>
-                )}
               </div>
             </div>
           );
         })}
       </div>
 
-      {/* Collapse button when expanded */}
-      {selectedModel && (
+      {/* Reset filters */}
+      {(selectedModel || selectedShot) && (
         <button
-          onClick={() => setSelectedModel(null)}
+          onClick={() => { setSelectedModel(null); setSelectedShot(null); }}
           className="mt-4 text-sm text-[var(--text-muted)] hover:text-[var(--accent-primary)] transition-colors flex items-center gap-2 mx-auto"
         >
           <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
           </svg>
-          Show all models
+          Show all images
         </button>
       )}
 
       {/* SEO Text */}
       <p className="text-xs text-[var(--text-muted)] mt-4 text-center">
-        Generated using the prompt above. Results may vary based on seed and settings.
+        Generated using the prompts above. Results may vary based on seed and settings.
       </p>
     </div>
   );
