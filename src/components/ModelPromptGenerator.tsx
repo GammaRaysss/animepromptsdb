@@ -189,7 +189,7 @@ export default function ModelPromptGenerator({
               border: '1px solid var(--border)',
             }}
           >
-            {imageError[selectedShot] ? (
+            {imageError[`${selectedModel}_${selectedShot}`] ? (
               <div
                 style={{
                   width: '100%',
@@ -210,11 +210,11 @@ export default function ModelPromptGenerator({
               </div>
             ) : (
               <Image
-                src={`/images/characters/${characterSlug}/${characterSlug}_${selectedShot}.png`}
+                src={`/images/characters/${characterSlug}/${characterSlug}_${selectedModel}_${selectedShot}.png`}
                 alt={`${characterName} - ${shotType.name}`}
                 fill
                 style={{ objectFit: 'cover' }}
-                onError={() => setImageError((prev) => ({ ...prev, [selectedShot]: true }))}
+                onError={() => setImageError((prev) => ({ ...prev, [`${selectedModel}_${selectedShot}`]: true }))}
               />
             )}
           </div>
