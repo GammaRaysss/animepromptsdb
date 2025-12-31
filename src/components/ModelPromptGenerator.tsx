@@ -20,7 +20,7 @@ export default function ModelPromptGenerator({
   basePrompt,
   baseNegative
 }: ModelPromptGeneratorProps) {
-  const [selectedModel, setSelectedModel] = useState('noobai');
+  const [selectedModel, setSelectedModel] = useState('illustrious');
   const [selectedShot, setSelectedShot] = useState('portrait');
   const [imageError, setImageError] = useState<Record<string, boolean>>({});
 

@@ -50,7 +50,7 @@ export default function CharacterAvatar({
       }}
     >
       <Image
-        src={`/images/characters/${characterSlug}/${characterSlug}_noobai_portrait.png`}
+        src={`/images/characters/${characterSlug}/${characterSlug}_illustrious_portrait.png`}
         alt={characterName}
         fill
         style={{ objectFit: 'cover' }}
