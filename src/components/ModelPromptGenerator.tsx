@@ -4,6 +4,7 @@ import { useState } from 'react';
 import Image from 'next/image';
 import { MODEL_PRESETS, generateModelPrompt, getModelNegativePrompt } from '@/data/modelPresets';
 import { SHOT_TYPES, SHOT_TYPE_ORDER } from '@/data/shotTypes';
+import { getBodyDescriptors } from '@/data/characters';
 import CopyButton from './CopyButton';
 
 interface ModelPromptGeneratorProps {
@@ -25,10 +26,29 @@ export default function ModelPromptGenerator({
 
   const preset = MODEL_PRESETS[selectedModel];
   const shotType = SHOT_TYPES[selectedShot];
+  const bodyDescriptors = getBodyDescriptors(characterSlug);
 
-  // Build the prompt with shot type tags
-  const shotTags = shotType.tags.join(', ');
-  const promptWithShot = `${basePrompt}, ${shotTags}`;
+  // Get body descriptors based on shot type
+  const getBodyTagsForShot = () => {
+    switch (selectedShot) {
+      case 'portrait':
+        return bodyDescriptors.portrait;
+      case 'upper_body':
+        return bodyDescriptors.upperBody;
+      case 'full_body':
+        return bodyDescriptors.fullBody;
+      default:
+        return bodyDescriptors.portrait;
+    }
+  };
+
+  const bodyTags = getBodyTagsForShot();
+  const shotTags = shotType.tags;
+  const allShotTags = [...shotTags, ...bodyTags];
+  const shotTagsString = allShotTags.join(', ');
+
+  // Build the prompt with shot type tags and body descriptors
+  const promptWithShot = `${basePrompt}, ${shotTagsString}`;
   const optimizedPrompt = generateModelPrompt(promptWithShot, selectedModel);
   const optimizedNegative = getModelNegativePrompt(selectedModel, baseNegative);
 
@@ -206,9 +226,9 @@ export default function ModelPromptGenerator({
             {/* Tags to Add */}
             <div className="mb-4">
               <h4 className="text-sm font-semibold text-[var(--text-muted)] uppercase tracking-wider mb-2">
-                Added Tags
+                Shot Tags
               </h4>
-              <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.375rem' }}>
+              <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.375rem', marginBottom: '0.5rem' }}>
                 {shotType.tags.map((tag) => (
                   <span
                     key={tag}
@@ -217,6 +237,24 @@ export default function ModelPromptGenerator({
                       background: 'var(--accent-secondary)',
                       color: 'white',
                       borderColor: 'var(--accent-secondary)',
+                    }}
+                  >
+                    {tag}
+                  </span>
+                ))}
+              </div>
+              <h4 className="text-sm font-semibold text-[var(--text-muted)] uppercase tracking-wider mb-2 mt-3">
+                Body Descriptors
+              </h4>
+              <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.375rem' }}>
+                {bodyTags.map((tag) => (
+                  <span
+                    key={tag}
+                    className="tag"
+                    style={{
+                      background: 'var(--accent-primary)',
+                      color: 'white',
+                      borderColor: 'var(--accent-primary)',
                     }}
                   >
                     {tag}
@@ -292,13 +330,18 @@ export default function ModelPromptGenerator({
             </span>
             <span style={{ color: 'var(--text-muted)' }}>, </span>
             <span style={{ color: 'var(--accent-secondary)' }}>
-              {shotTags}
+              {shotTags.join(', ')}
+            </span>
+            <span style={{ color: 'var(--text-muted)' }}>, </span>
+            <span style={{ color: '#f472b6' }}>
+              {bodyTags.join(', ')}
             </span>
           </code>
         </div>
         <p className="text-xs text-[var(--text-muted)] mt-2">
-          <span style={{ color: 'var(--accent-primary)' }}>Pink</span> = model quality tags |
-          <span style={{ color: 'var(--accent-secondary)' }}> Purple</span> = shot type tags
+          <span style={{ color: 'var(--accent-primary)' }}>Pink</span> = quality |
+          <span style={{ color: 'var(--accent-secondary)' }}> Purple</span> = shot |
+          <span style={{ color: '#f472b6' }}> Rose</span> = body
         </p>
       </div>
 

@@ -1,3 +1,564 @@
+export interface BodyDescriptors {
+  portrait: string[];  // Face/head focused tags
+  upperBody: string[]; // Chest, torso, arms
+  fullBody: string[];  // Full figure including hips, thighs, legs
+}
+
+// Body type presets for common archetypes
+export const BODY_PRESETS: Record<string, BodyDescriptors> = {
+  // Standard female - medium proportions
+  standard: {
+    portrait: ["detailed face", "detailed eyes", "parted lips"],
+    upperBody: ["medium breasts", "slim waist", "navel"],
+    fullBody: ["medium breasts", "slim waist", "wide hips", "thighs", "long legs"]
+  },
+  // Petite/small build
+  petite: {
+    portrait: ["detailed face", "detailed eyes", "cute"],
+    upperBody: ["small breasts", "flat chest", "slim", "petite"],
+    fullBody: ["small breasts", "petite", "slim hips", "slender legs"]
+  },
+  // Shortstack - short but curvy
+  shortstack: {
+    portrait: ["detailed face", "detailed eyes"],
+    upperBody: ["large breasts", "huge breasts", "cleavage", "slim waist"],
+    fullBody: ["large breasts", "slim waist", "wide hips", "thick thighs", "short"]
+  },
+  // Busty/curvy
+  curvy: {
+    portrait: ["detailed face", "detailed eyes", "full lips"],
+    upperBody: ["large breasts", "huge breasts", "cleavage", "slim waist"],
+    fullBody: ["large breasts", "slim waist", "wide hips", "thick thighs", "curvy", "plump"]
+  },
+  // Athletic/toned
+  athletic: {
+    portrait: ["detailed face", "detailed eyes", "sharp features"],
+    upperBody: ["medium breasts", "toned", "abs", "slim waist"],
+    fullBody: ["medium breasts", "abs", "toned", "athletic", "muscular thighs", "long legs"]
+  },
+  // Muscular female
+  muscular: {
+    portrait: ["detailed face", "detailed eyes", "sharp features"],
+    upperBody: ["medium breasts", "abs", "muscular", "toned arms"],
+    fullBody: ["medium breasts", "abs", "muscular", "muscular thighs", "athletic"]
+  },
+  // Tall and elegant
+  tall: {
+    portrait: ["detailed face", "detailed eyes", "elegant"],
+    upperBody: ["medium breasts", "slim waist", "elegant"],
+    fullBody: ["medium breasts", "slim waist", "wide hips", "long legs", "tall female"]
+  },
+  // Mature/milf
+  mature: {
+    portrait: ["detailed face", "detailed eyes", "mature female", "full lips"],
+    upperBody: ["large breasts", "cleavage", "slim waist", "mature female"],
+    fullBody: ["large breasts", "slim waist", "wide hips", "thick thighs", "mature female"]
+  },
+  // Child character (no body descriptors)
+  child: {
+    portrait: ["detailed face", "detailed eyes", "cute"],
+    upperBody: ["child", "flat chest"],
+    fullBody: ["child", "small"]
+  }
+};
+
+// Character-specific body descriptor overrides
+export const CHARACTER_BODY_OVERRIDES: Record<string, BodyDescriptors> = {
+  // Tier S characters with specific body types
+  "makima": {
+    portrait: ["detailed face", "ringed eyes", "smirk", "red lips"],
+    upperBody: ["medium breasts", "white shirt", "black necktie", "slim waist"],
+    fullBody: ["medium breasts", "slim waist", "wide hips", "long legs", "black pants"]
+  },
+  "zero-two": {
+    portrait: ["detailed face", "aqua eyes", "red horns", "pink lips", "fangs"],
+    upperBody: ["medium breasts", "red bodysuit", "cleavage", "slim waist"],
+    fullBody: ["medium breasts", "slim waist", "wide hips", "thick thighs", "long legs"]
+  },
+  "rem": {
+    portrait: ["detailed face", "blue eyes", "hair over one eye", "cute"],
+    upperBody: ["medium breasts", "maid outfit", "slim waist"],
+    fullBody: ["medium breasts", "slim waist", "wide hips", "thighs", "maid outfit"]
+  },
+  "marin-kitagawa": {
+    portrait: ["detailed face", "pink eyes", "gyaru makeup", "smile"],
+    upperBody: ["large breasts", "cleavage", "tan", "slim waist"],
+    fullBody: ["large breasts", "slim waist", "wide hips", "thick thighs", "tan", "long legs"]
+  },
+  "yor-forger": {
+    portrait: ["detailed face", "red eyes", "elegant", "gentle smile"],
+    upperBody: ["large breasts", "cleavage", "slim waist"],
+    fullBody: ["large breasts", "slim waist", "wide hips", "thick thighs", "long legs"]
+  },
+  "power": {
+    portrait: ["detailed face", "yellow eyes", "fangs", "crazy smile", "red horns"],
+    upperBody: ["medium breasts", "slim", "messy"],
+    fullBody: ["medium breasts", "slim", "wide hips", "thighs"]
+  },
+  "2b": {
+    portrait: ["detailed face", "blindfold", "mole under mouth", "white hair"],
+    upperBody: ["large breasts", "cleavage", "black dress", "slim waist"],
+    fullBody: ["large breasts", "slim waist", "wide hips", "thick thighs", "thighhighs", "ass"]
+  },
+  "asuna-yuuki": {
+    portrait: ["detailed face", "brown eyes", "orange hair", "determined"],
+    upperBody: ["medium breasts", "slim waist"],
+    fullBody: ["medium breasts", "slim waist", "wide hips", "long legs", "athletic"]
+  },
+  "raiden-shogun": {
+    portrait: ["detailed face", "purple eyes", "regal", "serious"],
+    upperBody: ["large breasts", "cleavage", "kimono", "slim waist"],
+    fullBody: ["large breasts", "slim waist", "wide hips", "thick thighs", "long legs"]
+  },
+  "hu-tao": {
+    portrait: ["detailed face", "flower-shaped pupils", "playful", "smug"],
+    upperBody: ["small breasts", "flat chest", "slim", "petite"],
+    fullBody: ["small breasts", "slim", "petite", "slim hips"]
+  },
+  "ganyu": {
+    portrait: ["detailed face", "purple eyes", "horns", "gentle"],
+    upperBody: ["large breasts", "cleavage", "slim waist"],
+    fullBody: ["large breasts", "slim waist", "wide hips", "thick thighs", "long legs"]
+  },
+  "hatsune-miku": {
+    portrait: ["detailed face", "aqua eyes", "twintails"],
+    upperBody: ["small breasts", "slim", "detached sleeves"],
+    fullBody: ["small breasts", "slim", "thighhighs", "long legs"]
+  },
+  "nezuko-kamado": {
+    portrait: ["detailed face", "pink eyes", "bamboo muzzle", "cute"],
+    upperBody: ["medium breasts", "kimono", "slim"],
+    fullBody: ["medium breasts", "slim", "kimono", "bare feet"]
+  },
+  "mai-sakurajima": {
+    portrait: ["detailed face", "purple eyes", "elegant", "confident"],
+    upperBody: ["large breasts", "bunnysuit", "cleavage", "slim waist"],
+    fullBody: ["large breasts", "slim waist", "wide hips", "thick thighs", "pantyhose", "long legs"]
+  },
+  "rias-gremory": {
+    portrait: ["detailed face", "blue eyes", "red hair", "confident"],
+    upperBody: ["large breasts", "huge breasts", "cleavage", "slim waist"],
+    fullBody: ["large breasts", "slim waist", "wide hips", "thick thighs", "long legs"]
+  },
+  "hinata-hyuga": {
+    portrait: ["detailed face", "white eyes", "byakugan", "shy", "blush"],
+    upperBody: ["large breasts", "huge breasts", "cleavage", "slim waist"],
+    fullBody: ["large breasts", "slim waist", "wide hips", "thick thighs"]
+  },
+  "nico-robin": {
+    portrait: ["detailed face", "blue eyes", "elegant", "mysterious smile"],
+    upperBody: ["large breasts", "cleavage", "slim waist", "mature female"],
+    fullBody: ["large breasts", "slim waist", "wide hips", "long legs", "tall female"]
+  },
+  "toga-himiko": {
+    portrait: ["detailed face", "yellow eyes", "fangs", "crazy smile", "blush"],
+    upperBody: ["medium breasts", "slim"],
+    fullBody: ["medium breasts", "slim", "athletic", "thighs"]
+  },
+  "mikasa-ackerman": {
+    portrait: ["detailed face", "grey eyes", "short hair", "serious"],
+    upperBody: ["medium breasts", "abs", "muscular", "toned"],
+    fullBody: ["medium breasts", "abs", "muscular", "athletic", "muscular thighs"]
+  },
+  "aqua": {
+    portrait: ["detailed face", "blue eyes", "crying", "dramatic"],
+    upperBody: ["medium breasts", "cleavage", "slim waist"],
+    fullBody: ["medium breasts", "slim waist", "wide hips", "thick thighs", "long legs"]
+  },
+  // Tier A
+  "albedo": {
+    portrait: ["detailed face", "yellow eyes", "horns", "elegant"],
+    upperBody: ["large breasts", "huge breasts", "cleavage", "slim waist"],
+    fullBody: ["large breasts", "slim waist", "wide hips", "thick thighs", "hip wings"]
+  },
+  "shalltear-bloodfallen": {
+    portrait: ["detailed face", "red eyes", "pale skin", "gothic"],
+    upperBody: ["flat chest", "small breasts", "petite", "pale skin"],
+    fullBody: ["flat chest", "petite", "slim hips", "gothic lolita"]
+  },
+  "eula-lawrence": {
+    portrait: ["detailed face", "yellow eyes", "elegant", "tsundere"],
+    upperBody: ["large breasts", "cleavage", "slim waist"],
+    fullBody: ["large breasts", "slim waist", "wide hips", "thick thighs", "long legs", "ass"]
+  },
+  "keqing": {
+    portrait: ["detailed face", "purple eyes", "twintails", "elegant"],
+    upperBody: ["medium breasts", "slim waist"],
+    fullBody: ["medium breasts", "slim waist", "wide hips", "thighs", "long legs"]
+  },
+  "yae-miko": {
+    portrait: ["detailed face", "purple eyes", "fox ears", "teasing", "smug"],
+    upperBody: ["large breasts", "cleavage", "slim waist"],
+    fullBody: ["large breasts", "slim waist", "wide hips", "thick thighs"]
+  },
+  "mona": {
+    portrait: ["detailed face", "blue eyes", "witch hat", "proud"],
+    upperBody: ["medium breasts", "leotard", "slim waist"],
+    fullBody: ["medium breasts", "slim waist", "wide hips", "thick thighs", "ass", "leotard"]
+  },
+  "ram": {
+    portrait: ["detailed face", "red eyes", "pink hair", "smug"],
+    upperBody: ["small breasts", "flat chest", "maid outfit", "slim"],
+    fullBody: ["small breasts", "slim", "petite", "maid outfit"]
+  },
+  "emilia": {
+    portrait: ["detailed face", "purple eyes", "silver hair", "innocent"],
+    upperBody: ["medium breasts", "slim waist"],
+    fullBody: ["medium breasts", "slim waist", "wide hips", "thighs", "long legs"]
+  },
+  "echidna": {
+    portrait: ["detailed face", "black sclera", "white pupils", "mysterious smile"],
+    upperBody: ["medium breasts", "black dress", "slim waist"],
+    fullBody: ["medium breasts", "slim waist", "wide hips", "thighs"]
+  },
+  "chizuru-mizuhara": {
+    portrait: ["detailed face", "brown eyes", "beautiful", "blushing"],
+    upperBody: ["medium breasts", "cleavage", "slim waist"],
+    fullBody: ["medium breasts", "slim waist", "wide hips", "long legs"]
+  },
+  "ai-hoshino": {
+    portrait: ["detailed face", "star-shaped pupils", "idol", "wink"],
+    upperBody: ["medium breasts", "idol outfit", "slim waist"],
+    fullBody: ["medium breasts", "slim waist", "wide hips", "thighs", "long legs"]
+  },
+  "anya-forger": BODY_PRESETS.child,
+  "frieren": {
+    portrait: ["detailed face", "green eyes", "elf ears", "expressionless"],
+    upperBody: ["small breasts", "flat chest", "petite", "slim"],
+    fullBody: ["small breasts", "petite", "slim", "elf"]
+  },
+  "fern": {
+    portrait: ["detailed face", "purple eyes", "serious"],
+    upperBody: ["large breasts", "cleavage", "slim waist"],
+    fullBody: ["large breasts", "slim waist", "wide hips", "thick thighs"]
+  },
+  "nami": {
+    portrait: ["detailed face", "brown eyes", "orange hair", "confident"],
+    upperBody: ["large breasts", "huge breasts", "cleavage", "slim waist", "bikini top"],
+    fullBody: ["large breasts", "slim waist", "wide hips", "thick thighs", "long legs"]
+  },
+  "yamato": {
+    portrait: ["detailed face", "orange eyes", "horns", "confident"],
+    upperBody: ["large breasts", "sarashi", "abs", "muscular"],
+    fullBody: ["large breasts", "abs", "muscular", "wide hips", "thick thighs", "tall female"]
+  },
+  "tsunade": {
+    portrait: ["detailed face", "brown eyes", "forehead mark", "mature female"],
+    upperBody: ["huge breasts", "massive breasts", "cleavage", "slim waist", "mature female"],
+    fullBody: ["huge breasts", "slim waist", "wide hips", "thick thighs", "mature female"]
+  },
+  "sakura-haruno": {
+    portrait: ["detailed face", "green eyes", "pink hair", "determined"],
+    upperBody: ["small breasts", "athletic", "slim"],
+    fullBody: ["small breasts", "athletic", "slim", "toned"]
+  },
+  "android-18": {
+    portrait: ["detailed face", "blue eyes", "blonde hair", "cool"],
+    upperBody: ["medium breasts", "slim waist"],
+    fullBody: ["medium breasts", "slim waist", "wide hips", "thighs", "athletic"]
+  },
+  "bulma": {
+    portrait: ["detailed face", "blue eyes", "blue hair", "confident"],
+    upperBody: ["medium breasts", "cleavage", "slim waist"],
+    fullBody: ["medium breasts", "slim waist", "wide hips", "thighs"]
+  },
+  "lucy-heartfilia": {
+    portrait: ["detailed face", "brown eyes", "blonde hair"],
+    upperBody: ["large breasts", "cleavage", "slim waist"],
+    fullBody: ["large breasts", "slim waist", "wide hips", "thick thighs", "long legs"]
+  },
+  "erza-scarlet": {
+    portrait: ["detailed face", "brown eyes", "red hair", "fierce"],
+    upperBody: ["large breasts", "cleavage", "armor", "slim waist"],
+    fullBody: ["large breasts", "slim waist", "wide hips", "thick thighs", "athletic"]
+  },
+  "megumin": {
+    portrait: ["detailed face", "red eyes", "eyepatch", "chuunibyou"],
+    upperBody: ["flat chest", "small breasts", "petite"],
+    fullBody: ["flat chest", "petite", "slim", "small"]
+  },
+  "darkness": {
+    portrait: ["detailed face", "blue eyes", "blonde hair", "blush"],
+    upperBody: ["large breasts", "huge breasts", "cleavage", "armor"],
+    fullBody: ["large breasts", "slim waist", "wide hips", "thick thighs", "armor"]
+  },
+  "tatsumaki": {
+    portrait: ["detailed face", "green eyes", "green hair", "arrogant"],
+    upperBody: ["small breasts", "flat chest", "petite"],
+    fullBody: ["small breasts", "petite", "slim hips", "short", "floating"]
+  },
+  "fubuki": {
+    portrait: ["detailed face", "green eyes", "green hair", "elegant"],
+    upperBody: ["large breasts", "huge breasts", "cleavage", "fur coat"],
+    fullBody: ["large breasts", "slim waist", "wide hips", "thick thighs", "curvy"]
+  },
+  "yoruichi-shihouin": {
+    portrait: ["detailed face", "yellow eyes", "dark skin", "confident"],
+    upperBody: ["large breasts", "cleavage", "dark skin", "athletic"],
+    fullBody: ["large breasts", "slim waist", "wide hips", "thick thighs", "dark skin", "athletic"]
+  },
+  "rangiku-matsumoto": {
+    portrait: ["detailed face", "blue eyes", "blonde hair", "playful"],
+    upperBody: ["huge breasts", "massive breasts", "cleavage", "slim waist"],
+    fullBody: ["huge breasts", "slim waist", "wide hips", "thick thighs", "curvy"]
+  },
+  "ochaco-uraraka": {
+    portrait: ["detailed face", "brown eyes", "rosy cheeks", "cheerful"],
+    upperBody: ["medium breasts", "slim waist", "athletic"],
+    fullBody: ["medium breasts", "slim waist", "wide hips", "thick thighs", "athletic"]
+  },
+  "momo-yaoyorozu": {
+    portrait: ["detailed face", "dark eyes", "ponytail", "elegant"],
+    upperBody: ["large breasts", "cleavage", "slim waist"],
+    fullBody: ["large breasts", "slim waist", "wide hips", "thick thighs", "tall female", "long legs"]
+  },
+  "mirko": {
+    portrait: ["detailed face", "red eyes", "rabbit ears", "dark skin", "fierce"],
+    upperBody: ["medium breasts", "abs", "muscular", "dark skin"],
+    fullBody: ["medium breasts", "abs", "muscular", "dark skin", "muscular thighs", "athletic"]
+  },
+  "shinobu-kocho": {
+    portrait: ["detailed face", "purple eyes", "butterfly hair ornament", "smile"],
+    upperBody: ["small breasts", "petite", "slim"],
+    fullBody: ["small breasts", "petite", "slim", "short"]
+  },
+  "mitsuri-kanroji": {
+    portrait: ["detailed face", "green eyes", "pink hair", "cheerful", "blush"],
+    upperBody: ["large breasts", "cleavage", "muscular", "slim waist"],
+    fullBody: ["large breasts", "muscular", "slim waist", "wide hips", "thick thighs"]
+  },
+  "nobara-kugisaki": {
+    portrait: ["detailed face", "brown eyes", "orange hair", "fierce"],
+    upperBody: ["medium breasts", "slim waist", "athletic"],
+    fullBody: ["medium breasts", "slim waist", "wide hips", "thighs", "athletic"]
+  },
+  "maki-zenin": {
+    portrait: ["detailed face", "green eyes", "glasses", "serious"],
+    upperBody: ["medium breasts", "athletic", "abs", "toned"],
+    fullBody: ["medium breasts", "abs", "athletic", "muscular thighs", "toned"]
+  },
+  "jolyne-cujoh": {
+    portrait: ["detailed face", "green eyes", "buns", "confident"],
+    upperBody: ["medium breasts", "slim waist", "midriff"],
+    fullBody: ["medium breasts", "slim waist", "wide hips", "thighs", "athletic"]
+  },
+  "esdeath": {
+    portrait: ["detailed face", "blue eyes", "blue hair", "sadistic smile"],
+    upperBody: ["large breasts", "cleavage", "slim waist"],
+    fullBody: ["large breasts", "slim waist", "wide hips", "thick thighs", "tall female", "long legs"]
+  },
+  "akame": {
+    portrait: ["detailed face", "red eyes", "black hair", "serious"],
+    upperBody: ["medium breasts", "slim waist", "athletic"],
+    fullBody: ["medium breasts", "slim waist", "wide hips", "thighs", "athletic", "long legs"]
+  },
+  "saber": {
+    portrait: ["detailed face", "green eyes", "blonde hair", "ahoge", "noble"],
+    upperBody: ["small breasts", "armor", "slim waist"],
+    fullBody: ["small breasts", "slim waist", "wide hips", "athletic", "armor"]
+  },
+  "rin-tohsaka": {
+    portrait: ["detailed face", "aqua eyes", "twintails", "tsundere"],
+    upperBody: ["medium breasts", "slim waist"],
+    fullBody: ["medium breasts", "slim waist", "wide hips", "thighhighs", "zettai ryouiki"]
+  },
+  "ishtar": {
+    portrait: ["detailed face", "red eyes", "twintails", "arrogant"],
+    upperBody: ["medium breasts", "cleavage", "slim waist"],
+    fullBody: ["medium breasts", "slim waist", "wide hips", "thick thighs", "floating"]
+  },
+  "scathach": {
+    portrait: ["detailed face", "red eyes", "purple hair", "warrior"],
+    upperBody: ["large breasts", "cleavage", "bodysuit", "slim waist"],
+    fullBody: ["large breasts", "slim waist", "wide hips", "thick thighs", "bodysuit", "athletic"]
+  },
+  "jeanne-darc": {
+    portrait: ["detailed face", "purple eyes", "blonde braid", "holy"],
+    upperBody: ["medium breasts", "armor", "slim waist"],
+    fullBody: ["medium breasts", "slim waist", "wide hips", "thighs", "armor"]
+  },
+  "tamamo-no-mae": {
+    portrait: ["detailed face", "yellow eyes", "fox ears", "playful"],
+    upperBody: ["large breasts", "cleavage", "slim waist"],
+    fullBody: ["large breasts", "slim waist", "wide hips", "thick thighs", "fox tail"]
+  },
+  "shuten-douji": {
+    portrait: ["detailed face", "purple eyes", "horns", "seductive", "drunk"],
+    upperBody: ["small breasts", "flat chest", "petite", "pale skin"],
+    fullBody: ["small breasts", "petite", "slim hips", "short"]
+  },
+  "raphtalia": {
+    portrait: ["detailed face", "red eyes", "raccoon ears", "devoted"],
+    upperBody: ["medium breasts", "slim waist"],
+    fullBody: ["medium breasts", "slim waist", "wide hips", "thighs", "raccoon tail"]
+  },
+  "nagatoro": {
+    portrait: ["detailed face", "dark skin", "tan", "fangs", "teasing"],
+    upperBody: ["small breasts", "tan", "athletic", "slim"],
+    fullBody: ["small breasts", "tan", "athletic", "slim", "toned"]
+  },
+  "uzaki-hana": {
+    portrait: ["detailed face", "blue eyes", "fang", "smug"],
+    upperBody: ["huge breasts", "massive breasts", "cleavage", "shortstack"],
+    fullBody: ["huge breasts", "slim waist", "wide hips", "thick thighs", "short", "shortstack"]
+  },
+  "komi-shouko": {
+    portrait: ["detailed face", "purple eyes", "beautiful", "shy"],
+    upperBody: ["medium breasts", "slim waist", "elegant"],
+    fullBody: ["medium breasts", "slim waist", "wide hips", "long legs", "tall female"]
+  },
+  "bocchi": {
+    portrait: ["detailed face", "blue eyes", "nervous", "anxious"],
+    upperBody: ["small breasts", "flat chest", "slim"],
+    fullBody: ["small breasts", "slim", "petite"]
+  },
+  "ikuyo-kita": {
+    portrait: ["detailed face", "orange eyes", "red hair", "cheerful"],
+    upperBody: ["medium breasts", "slim waist"],
+    fullBody: ["medium breasts", "slim waist", "wide hips", "thighs"]
+  },
+  "lucy-elfen-lied": {
+    portrait: ["detailed face", "red eyes", "horns", "innocent"],
+    upperBody: ["medium breasts", "slim waist"],
+    fullBody: ["medium breasts", "slim waist", "wide hips", "thighs"]
+  },
+  "cc": {
+    portrait: ["detailed face", "yellow eyes", "green hair", "mysterious", "smirk"],
+    upperBody: ["large breasts", "cleavage", "slim waist"],
+    fullBody: ["large breasts", "slim waist", "wide hips", "thick thighs", "long legs", "ass"]
+  },
+  "kallen-stadtfeld": {
+    portrait: ["detailed face", "blue eyes", "red hair", "fierce"],
+    upperBody: ["large breasts", "cleavage", "slim waist"],
+    fullBody: ["large breasts", "slim waist", "wide hips", "thick thighs", "athletic"]
+  },
+  "ryuko-matoi": {
+    portrait: ["detailed face", "blue eyes", "black hair", "red highlights", "fierce"],
+    upperBody: ["medium breasts", "cleavage", "slim waist"],
+    fullBody: ["medium breasts", "slim waist", "wide hips", "thighs", "athletic"]
+  },
+  "satsuki-kiryuin": {
+    portrait: ["detailed face", "blue eyes", "thick eyebrows", "regal"],
+    upperBody: ["medium breasts", "slim waist", "athletic"],
+    fullBody: ["medium breasts", "slim waist", "wide hips", "long legs", "tall female", "athletic"]
+  },
+  "yuno-gasai": {
+    portrait: ["detailed face", "pink eyes", "yandere", "crazy eyes"],
+    upperBody: ["medium breasts", "slim waist"],
+    fullBody: ["medium breasts", "slim waist", "wide hips", "thighs"]
+  },
+  "kurisu-makise": {
+    portrait: ["detailed face", "blue eyes", "red hair", "tsundere"],
+    upperBody: ["medium breasts", "lab coat", "slim waist"],
+    fullBody: ["medium breasts", "slim waist", "wide hips", "thighs", "long legs"]
+  },
+  "asuka-langley": {
+    portrait: ["detailed face", "blue eyes", "red hair", "tsundere", "proud"],
+    upperBody: ["medium breasts", "plugsuit", "slim waist"],
+    fullBody: ["medium breasts", "slim waist", "wide hips", "thighs", "plugsuit"]
+  },
+  "rei-ayanami": {
+    portrait: ["detailed face", "red eyes", "blue hair", "emotionless"],
+    upperBody: ["small breasts", "plugsuit", "slim", "pale skin"],
+    fullBody: ["small breasts", "slim", "petite", "plugsuit", "pale skin"]
+  },
+  "mari-makinami": {
+    portrait: ["detailed face", "glasses", "brown hair", "cheerful"],
+    upperBody: ["large breasts", "plugsuit", "cleavage", "slim waist"],
+    fullBody: ["large breasts", "slim waist", "wide hips", "thick thighs", "plugsuit"]
+  },
+  "misato-katsuragi": {
+    portrait: ["detailed face", "brown eyes", "purple hair", "mature female"],
+    upperBody: ["large breasts", "cleavage", "slim waist", "mature female"],
+    fullBody: ["large breasts", "slim waist", "wide hips", "thick thighs", "mature female", "long legs"]
+  },
+  "cynthia-pokemon": {
+    portrait: ["detailed face", "grey eyes", "blonde hair", "elegant"],
+    upperBody: ["medium breasts", "slim waist", "elegant"],
+    fullBody: ["medium breasts", "slim waist", "wide hips", "long legs", "tall female"]
+  },
+  "marnie-pokemon": {
+    portrait: ["detailed face", "green eyes", "twintails", "cool"],
+    upperBody: ["small breasts", "slim"],
+    fullBody: ["small breasts", "slim", "petite"]
+  },
+  "nessa-pokemon": {
+    portrait: ["detailed face", "blue eyes", "dark skin"],
+    upperBody: ["medium breasts", "dark skin", "athletic", "slim waist"],
+    fullBody: ["medium breasts", "dark skin", "athletic", "slim waist", "wide hips", "long legs"]
+  },
+  "lucoa": {
+    portrait: ["detailed face", "heterochromia", "blonde hair", "mature female"],
+    upperBody: ["huge breasts", "massive breasts", "cleavage", "mature female"],
+    fullBody: ["huge breasts", "slim waist", "wide hips", "thick thighs", "mature female", "tall female"]
+  },
+  "tohru": {
+    portrait: ["detailed face", "red eyes", "blonde hair", "horns", "devoted"],
+    upperBody: ["large breasts", "maid outfit", "cleavage", "slim waist"],
+    fullBody: ["large breasts", "slim waist", "wide hips", "thick thighs", "dragon tail"]
+  },
+  "elma": {
+    portrait: ["detailed face", "purple eyes", "blue hair", "horn", "hungry"],
+    upperBody: ["large breasts", "office lady", "cleavage", "slim waist"],
+    fullBody: ["large breasts", "slim waist", "wide hips", "thick thighs"]
+  },
+  "shiro": {
+    portrait: ["detailed face", "red eyes", "white hair", "emotionless"],
+    upperBody: ["flat chest", "small breasts", "petite"],
+    fullBody: ["flat chest", "petite", "slim", "small"]
+  },
+  "jibril": {
+    portrait: ["detailed face", "yellow eyes", "halo", "playful"],
+    upperBody: ["large breasts", "cleavage", "slim waist"],
+    fullBody: ["large breasts", "slim waist", "wide hips", "thighs", "angel wings"]
+  },
+  "sinon": {
+    portrait: ["detailed face", "blue eyes", "blue hair", "cool"],
+    upperBody: ["medium breasts", "slim waist", "athletic"],
+    fullBody: ["medium breasts", "slim waist", "wide hips", "thighs", "athletic"]
+  },
+  "alice-zuberg": {
+    portrait: ["detailed face", "blue eyes", "blonde hair", "noble"],
+    upperBody: ["medium breasts", "armor", "slim waist"],
+    fullBody: ["medium breasts", "slim waist", "wide hips", "thighs", "armor"]
+  },
+  "kurumi-tokisaki": {
+    portrait: ["detailed face", "heterochromia", "clock eye", "elegant"],
+    upperBody: ["large breasts", "cleavage", "gothic lolita", "slim waist"],
+    fullBody: ["large breasts", "slim waist", "wide hips", "thick thighs", "gothic lolita"]
+  },
+  "rebecca": {
+    portrait: ["detailed face", "pink eyes", "white hair", "chaotic"],
+    upperBody: ["large breasts", "huge breasts", "cleavage", "shortstack"],
+    fullBody: ["large breasts", "wide hips", "thick thighs", "short", "shortstack"]
+  },
+  "lucy-cyberpunk": {
+    portrait: ["detailed face", "blue eyes", "white hair", "mysterious"],
+    upperBody: ["medium breasts", "slim waist"],
+    fullBody: ["medium breasts", "slim waist", "wide hips", "thighs", "long legs"]
+  },
+  "ilulu": {
+    portrait: ["detailed face", "red eyes", "pink hair", "horns", "fang"],
+    upperBody: ["huge breasts", "massive breasts", "cleavage", "shortstack"],
+    fullBody: ["huge breasts", "wide hips", "thick thighs", "short", "shortstack", "dragon tail"]
+  },
+  "sonia-pokemon": {
+    portrait: ["detailed face", "green eyes", "orange hair", "mature female"],
+    upperBody: ["large breasts", "cleavage", "lab coat", "mature female"],
+    fullBody: ["large breasts", "slim waist", "wide hips", "thick thighs", "mature female"]
+  }
+};
+
+// Helper function to get body descriptors for a character
+export function getBodyDescriptors(slug: string): BodyDescriptors {
+  // Check for character-specific override first
+  if (CHARACTER_BODY_OVERRIDES[slug]) {
+    return CHARACTER_BODY_OVERRIDES[slug];
+  }
+  // Default to standard body type
+  return BODY_PRESETS.standard;
+}
+
 export interface Character {
   name: string;
   slug: string;

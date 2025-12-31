@@ -17,7 +17,7 @@ export const SHOT_TYPES: Record<string, ShotTypePreset> = {
     name: 'Portrait / Face',
     shortName: 'Portrait',
     description: 'Close-up focusing on face and expressions',
-    tags: ['portrait', 'close-up', 'face focus', 'head shot'],
+    tags: ['portrait', 'close-up', 'face focus', 'detailed face', 'detailed eyes'],
     angleTips: [
       'from side - Profile view for dramatic effect',
       'from above - Cute, submissive look',
@@ -39,7 +39,7 @@ export const SHOT_TYPES: Record<string, ShotTypePreset> = {
     name: 'Upper Body',
     shortName: 'Upper Body',
     description: 'Chest up, showing outfit details and gestures',
-    tags: ['upper body', 'cowboy shot'],
+    tags: ['upper body', 'cowboy shot', 'breasts', 'cleavage', 'navel', 'midriff'],
     angleTips: [
       'from side - Show outfit silhouette',
       'from above - Emphasizes face while showing body',
@@ -62,7 +62,7 @@ export const SHOT_TYPES: Record<string, ShotTypePreset> = {
     name: 'Full Body',
     shortName: 'Full Body',
     description: 'Complete figure showing full outfit and pose',
-    tags: ['full body', 'standing'],
+    tags: ['full body', 'standing', 'breasts', 'wide hips', 'thick thighs', 'ass', 'legs', 'feet'],
     angleTips: [
       'from above - Bird\'s eye view for creative compositions',
       'from below - Heroic, imposing perspective',
